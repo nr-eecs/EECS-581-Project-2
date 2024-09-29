@@ -82,7 +82,7 @@ class Game:
         print(player.ships)
 
         
-    def shot(self, player, target, y, x): # player = player being shot AT (x and y are swapped due to 2D array)
+    def shot(self, player, target, x, y): # player = player being shot AT (x and y are swapped due to 2D array)
     # Checks if the square is valid, else it raises IndexError
         if v.is_valid_shot(x, y):
             # Saves the data of the square
@@ -90,10 +90,11 @@ class Game:
             # If the square is empty, it is a miss
             if square == 0:
                 player.shots[x][y] = "M"
+                target.ships[x][y] = "M"
                 return "missed!"
             # If the square has been hit before, raise IndexError
             elif player.shots[x][y] == 'X' or player.shots[x][y] == 'M' or player.shots[x][y] == "S":
-                raise IndexError("Index picked before")
+                return "Index picked before"
             # Otherwise, it is a hit
             else:
                 # Checks if the ship is sunk
@@ -102,9 +103,11 @@ class Game:
                     # Checks if all ships are sunk
                     if target.is_all_sunk():
                         player.shots[x][y] = "S"
+                        target.ships[x][y] = "S"
                         return "Sunk all your opponent's ships!"
                     else:
                         player.shots[x][y] = "S"
+                        target.ships[x][y] = "S"
                         return "You sunk a ship!"
                 else:
                     player.shots[x][y] = "X"
@@ -120,7 +123,7 @@ class Game:
         p1_turns = self.plies // 2 + self.plies % 2
         p2_turns = self.plies // 2
 
-        columns = ["Successful Shots", "Misses", "Ships Destroyed", "Accuracy", "Hit-To-Miss Ratio"]
+        columns = ["Successful Shots", "Misses", "Ships Destroyed", "Accuracy", "Hit-Receive Ratio"]
         column_length = 20
 
         accuracy1 = "N/A" if p1_turns == 0 else str(round(s1 / p1_turns, 2))
@@ -128,7 +131,7 @@ class Game:
         misses1 = str(p1_turns - s1)
         misses2 = str(p2_turns - s2)
         ratio1 = "N/A" if h1 == 0 else str(round(s1 / h1, 2))
-        ratio2 = "N/A" if h2 == 0 else  str(round(s2 / h2, 2))
+        ratio2 = "N/A" if h2 == 0 else str(round(s2 / h2, 2))
         destroyed1 = str(d1)
         destroyed2 = str(d2)
         success1 = str(s1)
@@ -188,14 +191,11 @@ class Game:
                 print(e)
                 continue
             
-            #shot() method can raise an error with invalid input
-            try:
-                shot = self.shot(player, target, x, y)
+            shot = self.shot(player, target, x, y)
+            if shot != "Index picked before":
+                valid_turn = True
+                self.plies += 1
                 player.update_strategy(shot, x, y)
                 print(shot)
-            # Gives another chance to input proper coords if an error is raised
-            except:
+            else:
                 print("Invalid shot, try again")
-                continue
-            valid_turn = True
-            self.plies += 1

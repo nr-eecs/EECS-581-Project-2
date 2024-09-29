@@ -117,7 +117,7 @@ class Player:
                 x,y = (None, None)
                 for i, row in enumerate(target.ships):
                     for j, col in enumerate(row):
-                        if col.isdigit() and int(col) > 0:
+                        if type(col) == int and col > 0:
                             x, y = i, j
                             found_ship = True
                             break
