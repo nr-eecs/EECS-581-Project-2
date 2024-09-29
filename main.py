@@ -34,17 +34,18 @@ def main():
                 valid_ai_difficulty_input = True
             else:
                 print("Invalid AI difficulty, enter 'E' or 'M' or 'H'")
-
-    try:
-        num = int(input("Enter number of ships (min = 1, max = 5): "))
-    except:
-        print("num must be an integer")
-        return 0
-    
-    if num < 1 or num > 5:
-        print("You can only have 1 through 5 ships")
-        main()
-        return 0
+    valid_ship_count = False
+    while not valid_ship_count:
+        try:
+            num = int(input("Enter number of ships (min = 1, max = 5): "))
+            if 1 <= num <= 5:
+                valid_ship_count = True
+            else:
+                print("You can only have 1 through 5 ships")
+                
+        except ValueError:
+            print("Invalid input. Please enter a valid integer between 1 and 5.")
+            
     
     # Initializes Game and Player classes
     G = Game(num, is_ai, ai_difficulty)
