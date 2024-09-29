@@ -71,11 +71,11 @@ def main():
         player = 1
         for p in order:
             print(f'Player {player}s turn')
-            p.print_board(0)
+            p.print_board()
             G.turn(p, order[order.index(p)-1])
             if order[order.index(p)-1].is_all_sunk():
                 game_on = False
-                p.print_board(0)
+                p.print_board()
                 break
             player += 1
 
