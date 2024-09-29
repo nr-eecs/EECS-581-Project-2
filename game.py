@@ -93,7 +93,7 @@ class Game:
                 target.ships[x][y] = "M"
                 return "--- You Missed! ---\n"
             # If the square has been hit before, raise IndexError
-            elif player.shots[x][y] == 'X' or player.shots[x][y] == 'M' or player.shots[x][y] == "S":
+            elif player.shots[x][y] in ['X','M','S']:
                 return "Index picked before"
             # Otherwise, it is a hit
             else:
@@ -101,13 +101,11 @@ class Game:
                 if target.is_sunk(square):
                     target.num_ships -= 1
                     # Checks if all ships are sunk
+                    player.shots[x][y] = "S"
+                    target.ships[x][y] = "S"
                     if target.is_all_sunk():
-                        player.shots[x][y] = "S"
-                        target.ships[x][y] = "S"
                         return "🚢🔥 Sunk all your opponent's ships! 🔥🚢\n"
                     else:
-                        player.shots[x][y] = "S"
-                        target.ships[x][y] = "S"
                         return "🚢💥 You sunk a ship! 💥🚢\n"
                 else:
                     player.shots[x][y] = "X"
