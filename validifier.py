@@ -19,7 +19,7 @@ def is_valid_ship_placement(row, col, board, ship_size, orientation):
     return - true if valid, false otherwise.
     """
     # check bounds based on orientation and ship size
-    if orientation == 'horizontal':
+    if orientation == 'H':
         # check if ship fits within the board horizontally
         if col + ship_size > len(board[0]):
             return False
@@ -31,13 +31,14 @@ def is_valid_ship_placement(row, col, board, ship_size, orientation):
         except:
             raise IndexError("Those coords are not permitted")
 
-    elif orientation == 'vertical':
+    elif orientation == 'V':
         # check if ship fits within the board vertically
         if row + ship_size > len(board):
             return False
         # check if all the spaces in the column are empty (0)
         try:
             for i in range(ship_size):
+                print(board[row+i][col])
                 if board[row + i][col] != 0:
                     return False
         except:
@@ -46,7 +47,7 @@ def is_valid_ship_placement(row, col, board, ship_size, orientation):
     return True
 
 def is_valid_shot(row, col):
-    if row<=10 and col<=10:
+    if 0<=row<=10 and 0<=col<=10:
         return True
     else:
         return False

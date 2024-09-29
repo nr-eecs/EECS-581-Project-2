@@ -11,6 +11,30 @@ from game import Game
 def main():
     game_on = True
     print("###  Welcome to Battleship!  ###")
+
+    valid_player_count_input = False
+    is_ai = False
+    ai_difficulty = None
+
+    while not valid_player_count_input:
+        try:
+            is_ai_int = int(input("Enter number of human players for game (1, 2): "))
+            if is_ai_int not in (1,2):
+                raise Exception("Invalid player count")
+            valid_player_count_input = True
+            if is_ai_int == 1: is_ai = True
+        except Exception as e:
+            print(e)
+    
+    if is_ai:
+        valid_ai_difficulty_input = False
+        while not valid_ai_difficulty_input:
+            ai_difficulty = input("Enter Difficulty of AI - (E)asy, (M)edium, (H)ard: ")
+            if ai_difficulty.upper() in ("E", "M", "H"):
+                valid_ai_difficulty_input = True
+            else:
+                print("Invalid AI difficulty")
+
     try:
         num = int(input("Enter number of ships (min = 1, max = 5): "))
     except:
@@ -23,7 +47,7 @@ def main():
         return 0
     
     # Initializes Game and Player classes
-    G = Game(num)
+    G = Game(num, is_ai, ai_difficulty)
     P1 = G.get_P1()
     P2 = G.get_P2()
     
@@ -37,6 +61,9 @@ def main():
         player += 1
         for i in range(num):
             G.place_ship(p, i+1)
+        if p.is_ai:
+            print("AI has completed placing ships")
+        print()
 
     print("### Game Start! ###")
     # While loop for running the game until all of an opponents ships are sunk

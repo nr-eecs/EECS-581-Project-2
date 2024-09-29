@@ -8,10 +8,22 @@
 # Creation Date: 9/11/24
 
 from typing import Literal, List
+import random
+import validifier as v
 
 class Player:
-    def __init__(self, num_ships: int):
+    def __init__(self, num_ships: int, is_ai:bool = False, ai_difficulty:str = None):
         self.num_ships = num_ships
+        self.is_ai = is_ai
+        self.ai_difficulty = ai_difficulty
+
+        # Medium AI difficulty logic: randomly fire shots, until a hit is reached. After this, fire shots (if legal) in a clockwise
+        # manner starting from the top, advancing its reach by 1 with each round.
+        # Special state variables for medium AI difficulty:
+        self.ai_ship_found = False # has medium AI hit a ship
+        self.ai_ship_found_square = (None, None) # square of hit
+        self.orthogonal_direction = 0 # 0 -> Up, 1 -> Right, 2 -> Down, 3 -> Left
+        self.advancement = 1
         
         # generate boards 
         self.ships = [[0 for _ in range(10)] for _ in range(10)]
@@ -39,18 +51,122 @@ class Player:
             return self.shots 
         
     def print_board(self, num):
+
+        output_str_list = []
+        string_limit = 40
+
         coords = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
-        i = 0
-        if int(num) == 1:
-            print('    1  2  3  4  5  6  7  8  9  10\n')
-            for row in self.ships:
-                print(coords[i], ' ', '  '.join(map(str, row)), '\n')
-                i += 1
-        else:
-            print('    1  2  3  4  5  6  7  8  9  10\n')
-            for row in self.shots:
-                print(coords[i], ' ', '  '.join(map(str, row)), '\n')
-                i += 1
+        num_string = '    1  2  3  4  5  6  7  8  9  10'
+        
+        output_str_list.append(("         YOUR SHIPS", "        YOUR SHOTS"))
+        output_str_list.append((num_string, num_string))
+
+        for i, row in enumerate(self.ships):
+            ships_str = coords[i] +  '   ' + '  '.join(map(str, row))
+            shots_str = coords[i] +  '   ' + '  '.join(map(str, self.shots[i]))
+            output_str_list.append((ships_str, shots_str))
+        
+       # print("\n".join(["   |   ".join(k) for k in output_str_list]))
+        for str1, str2 in output_str_list:
+            str1 += " " * (string_limit - len(str1))
+            print(str1 + "|   " + str2)
+
         print('\n----------------------------------\n')
+    
+    def update_strategy(self, shot, x, y):
+        if self.ai_difficulty == "M":
+            if not self.ai_ship_found and shot == "You hit a ship!":
+                self.ai_ship_found = True
+                self.ai_ship_found_square = (x,y)
+            if self.ai_ship_found and shot == "You sunk a ship!":
+                self.ai_ship_found = False
+                self.ai_ship_found_square = (None, None)
+                self.advancement = 1
+    
+    def get_shot_placement(self, target=None):
+
+        if self.is_ai:
+            if self.ai_difficulty == "E":
+                x = random.randint(0,9)
+                y = random.randint(0,9)
+            elif self.ai_difficulty == "M":
+                if not self.ai_ship_found:
+                    x = random.randint(0,9)
+                    y = random.randint(0,9)
+                else:
+                    found_legal_square = False
+                    
+                    while not found_legal_square:
+                        x, y = self.ai_ship_found_square
+                        if self.orthogonal_direction == 0: 
+                            x -= self.advancement
+                        elif self.orthogonal_direction == 1:
+                            y += self.advancement
+                        elif self.orthogonal_direction == 2:
+                            x += self.advancement
+                        elif self.orthogonal_direction == 3:
+                            y -= self.advancement
+                        if v.is_valid_shot(x, y) and self.shots[x][y] not in ("X", "M", "S"):
+                            found_legal_square = True
+                        else:
+                            if self.orthogonal_direction == 3:
+                                self.advancement += 1
+                            self.orthogonal_direction = (self.orthogonal_direction + 1) % 4
+            elif self.ai_difficulty == "H":
+                found_ship = False
+                x,y = (None, None)
+                for i, row in enumerate(target.ships):
+                    for j, col in enumerate(row):
+                        if col.isdigit() and int(col) > 0:
+                            x, y = i, j
+                            found_ship = True
+                            break
+                    if found_ship:
+                        break
+        else:
+            turn_input = input("Input the square you want to shoot (e.g., A6), or (P)layer_stats, or (S)coreboard: ")
+            
+
+            if turn_input in ("P", "S"):
+                return turn_input
+
+            try:
+                y = ord(turn_input[0].upper()) - ord('A')  # converts characters to numbers
+                x = int(turn_input[1:]) - 1         # subtracts 1 due to 0-indexed
+            except:
+                raise Exception("Please pay attention to coordinate input formatting")
+
+        return (x, y)
+    
+    def get_stats(self):
+
+        success_shots = 0
+        total_ships_destroyed = 0
+        total_hits_taken = 0
+
+        for row in self.shots:
+            for col in row:
+                if col in ("S", "X"):
+                    success_shots += 1
+                if col == "S":
+                    total_ships_destroyed += 1
+
+        for row in self.ships:
+            for col in row:
+                if col in ("S", "X"):
+                    total_hits_taken += 1
+        
+        return success_shots, total_ships_destroyed, total_hits_taken
+
+    
+    def view_stats(self):
+
+        success_shots, total_ships_destroyed, total_hits_taken = self.get_stats()
+
+        print()
+        print("Total Successful Shots:", success_shots)
+        print("Total Opponent's Ships Destroyed:", total_ships_destroyed)
+        print("Total Hits Taken:", total_hits_taken)
+        print()
         
     
