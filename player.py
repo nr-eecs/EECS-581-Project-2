@@ -50,7 +50,7 @@ class Player:
         else:
             return self.shots 
         
-    def print_board(self, num):
+    def print_board(self):
 
         output_str_list = []
         string_limit = 40
@@ -87,6 +87,7 @@ class Player:
                 self.ai_ship_found = False
                 self.ai_ship_found_square = (None, None)
                 self.advancement = 1
+                self.orthogonal_direction = 0
     
     '''
     Handles deriving the next shot placement for AI difficulties, as well as the next shot placement or stats-related commands for
@@ -113,6 +114,18 @@ class Player:
                 if not self.ai_ship_found:
                     x = random.randint(0,9)
                     y = random.randint(0,9)
+                    
+                    # for debugging medium difficulty, let it find a ship tile with certainty
+                    # found_ship = False
+                    # x,y = (None, None)
+                    # for i, row in enumerate(target.ships):
+                    #     for j, col in enumerate(row):
+                    #         if type(col) == int and col > 0:
+                    #             x, y = i, j
+                    #             found_ship = True
+                    #             break
+                    #     if found_ship:
+                    #         break
                 else:
                     found_legal_square = False
                     
@@ -155,8 +168,8 @@ class Player:
                 return turn_input
 
             try:
-                y = ord(turn_input[0].upper()) - ord('A')  # converts characters to numbers
-                x = int(turn_input[1:]) - 1         # subtracts 1 due to 0-indexed
+                x = ord(turn_input[0].upper()) - ord('A')  # converts characters to numbers
+                y = int(turn_input[1:]) - 1         # subtracts 1 due to 0-indexed
             except:
                 raise Exception("Please pay attention to coordinate input formatting")
 

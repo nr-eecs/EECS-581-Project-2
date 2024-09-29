@@ -42,7 +42,7 @@ class Game:
                 col = random.randint(0, 9) if orientation == 'V' else random.randint(0, 10 - ship_size)     
                 is_valid_placement = v.is_valid_ship_placement(row, col, player.ships, ship_size, orientation)
             # debugging
-            print(f"Placed ship on {row, col}")
+            # print(f"Placed ship on {row, col}")
 
         while not is_valid_placement:       
             position = input("Input the ship's top-leftmost position (e.g., A6): ").strip()
@@ -78,9 +78,6 @@ class Game:
             # increases row index for length of ship
             for i in range(ship_size):
                 player.ships[row + i][col] = ship_size
-        
-        print(player.ships)
-
         
     def shot(self, player, target, x, y): # player = player being shot AT (x and y are swapped due to 2D array)
     # Checks if the square is valid, else it raises IndexError
@@ -125,7 +122,7 @@ class Game:
     Also displays the current leading player, determined by the total number of successful hits
     '''
     def display_scoreboard(self):
-        
+
         s1, d1, h1 = self.P1.get_stats()
         s2, d2, h2 = self.P2.get_stats()
 

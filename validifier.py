@@ -38,7 +38,6 @@ def is_valid_ship_placement(row, col, board, ship_size, orientation):
         # check if all the spaces in the column are empty (0)
         try:
             for i in range(ship_size):
-                print(board[row+i][col])
                 if board[row + i][col] != 0:
                     return False
         except:

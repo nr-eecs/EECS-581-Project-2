@@ -29,8 +29,8 @@ def main():
     if is_ai:
         valid_ai_difficulty_input = False
         while not valid_ai_difficulty_input:
-            ai_difficulty = input("Enter Difficulty of AI - (E)asy, (M)edium, (H)ard: ")
-            if ai_difficulty.upper() in ("E", "M", "H"):
+            ai_difficulty = input("Enter Difficulty of AI - (E)asy, (M)edium, (H)ard: ").upper()
+            if ai_difficulty in ("E", "M", "H"):
                 valid_ai_difficulty_input = True
             else:
                 print("Invalid AI difficulty")
