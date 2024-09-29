@@ -71,7 +71,7 @@ class Player:
             str1 += " " * (string_limit - len(str1))
             print(str1 + "|   " + str2)
 
-        print('\n----------------------------------\n')
+        print('\n-----------------------------------------------------------------------------\n')
     
     '''
     General update strategy function for AI opponents after each turn based on the feedback of the shot
@@ -161,7 +161,7 @@ class Player:
                     if found_ship:
                         break
         else:
-            turn_input = input("Input the square you want to shoot (e.g., A6), or (P)layer_stats, or (S)coreboard: ")
+            turn_input = input("Input the square you want to shoot (e.g., A6), or (P)layer Stats, or (S)coreboard: ")
             
 
             if turn_input in ("P", "S"):

@@ -57,7 +57,9 @@ def main():
     player = 1
     # For loop for placing ships for each player
     for p in order:
-        print(f'Player {player} must place all {num} ships, starting from smallest')
+        ship_text = f"{num} ship{'s' if num > 1 else ''}"
+        print(f'Player {player} must place {"all " if num > 1 else ""}{ship_text}{" starting from smallest" if num > 1 else ""}')
+        print()
         player += 1
         for i in range(num):
             G.place_ship(p, i+1)
@@ -65,12 +67,13 @@ def main():
             print("AI has completed placing ships")
         print()
 
-    print("### Game Start! ###")
+    print("🌟 ############ Game Start! ############ 🌟")
+    print()
     # While loop for running the game until all of an opponents ships are sunk
     while game_on:
         player = 1
         for p in order:
-            print(f'Player {player}s turn')
+            print(f"----------------------------🎯🔄 Player {player}'s turn 🔄🎯------------------------")
             p.print_board()
             G.turn(p, order[order.index(p)-1])
             if order[order.index(p)-1].is_all_sunk():
@@ -80,7 +83,7 @@ def main():
             player += 1
 
     
-    print("YOU WIN!")
+    print(f"🎉🏆 PLAYER {player} WINS! 🏆🎉")
     G.display_scoreboard()
 
 main()

@@ -44,8 +44,9 @@ class Game:
             # debugging
             # print(f"Placed ship on {row, col}")
 
-        while not is_valid_placement:       
-            position = input("Input the ship's top-leftmost position (e.g., A6): ").strip()
+        while not is_valid_placement: 
+            player.print_board()      
+            position = input(f"Input size {ship_size} ship's top-leftmost position (e.g., A6): ").strip()
             try:
                 row = letter_to_index(position[0])  # converts characters to numbers
                 col = int(position[1:]) - 1         # subtracts 1 due to 0-indexed
@@ -78,6 +79,8 @@ class Game:
             # increases row index for length of ship
             for i in range(ship_size):
                 player.ships[row + i][col] = ship_size
+
+        player.print_board()
         
     def shot(self, player, target, x, y): # player = player being shot AT (x and y are swapped due to 2D array)
     # Checks if the square is valid, else it raises IndexError
@@ -88,7 +91,7 @@ class Game:
             if square == 0:
                 player.shots[x][y] = "M"
                 target.ships[x][y] = "M"
-                return "missed!"
+                return "--- You Missed! ---\n"
             # If the square has been hit before, raise IndexError
             elif player.shots[x][y] == 'X' or player.shots[x][y] == 'M' or player.shots[x][y] == "S":
                 return "Index picked before"
@@ -101,15 +104,15 @@ class Game:
                     if target.is_all_sunk():
                         player.shots[x][y] = "S"
                         target.ships[x][y] = "S"
-                        return "Sunk all your opponent's ships!"
+                        return "🚢🔥 Sunk all your opponent's ships! 🔥🚢\n"
                     else:
                         player.shots[x][y] = "S"
                         target.ships[x][y] = "S"
-                        return "You sunk a ship!"
+                        return "🚢💥 You sunk a ship! 💥🚢\n"
                 else:
                     player.shots[x][y] = "X"
                     target.ships[x][y] = "X"
-                    return "You hit a ship!"
+                    return "💥 You hit a ship! 💥\n"
         else:
             raise IndexError("Index is not on the board")
         
@@ -147,7 +150,7 @@ class Game:
         player2_stats = (success2, misses2, destroyed2, accuracy2, ratio2)
 
         print()
-        print("=" * 49 + "SCOREBOARD" + "=" * 49)
+        print("=" * 54 + "SCOREBOARD" + "=" * 56)
 
         print(" " * 10, end="")
         for col in columns:
@@ -169,7 +172,7 @@ class Game:
             stat = " " * spaces + stat + " " * (column_length - len(stat) - spaces)
             print(stat, end="")
         print()
-        print("=" * 108)
+        print("=" * 120)
 
         if s1 > s2:
             print("Leading player: Player 1")
@@ -206,3 +209,6 @@ class Game:
             else:
                 if not player.is_ai:
                     print("Invalid shot, try again")
+            
+        if not player.is_ai:
+            input("Press Enter to continue to the next turn...")
