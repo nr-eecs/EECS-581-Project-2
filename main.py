@@ -23,8 +23,8 @@ def main():
                 raise Exception("Invalid player count")
             valid_player_count_input = True
             if is_ai_int == 1: is_ai = True
-        except Exception as e:
-            print(e)
+        except ValueError:
+            print("Invalid input. Please enter a valid integer (1 or 2).")
     
     if is_ai:
         valid_ai_difficulty_input = False
@@ -33,7 +33,7 @@ def main():
             if ai_difficulty in ("E", "M", "H"):
                 valid_ai_difficulty_input = True
             else:
-                print("Invalid AI difficulty")
+                print("Invalid AI difficulty, enter 'E' or 'M' or 'H'")
 
     try:
         num = int(input("Enter number of ships (min = 1, max = 5): "))
