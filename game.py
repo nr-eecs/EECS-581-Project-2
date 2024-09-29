@@ -116,7 +116,16 @@ class Game:
         else:
             raise IndexError("Index is not on the board")
         
+    '''
+    Display the scoreboard, which shows various statistics for both players.
+    The source of the statistics is the get_stats function from both players
+    Displays successful shots BY the player, misses BY the player, ships destroyed BY the player,
+    accuracy (calculated as successful hits divided by total turns), and hit-receive ratio (calculated as
+    total successful hits BY the player divided by successful hits RECEIVED by the player)
+    Also displays the current leading player, determined by the total number of successful hits
+    '''
     def display_scoreboard(self):
+        
         s1, d1, h1 = self.P1.get_stats()
         s2, d2, h2 = self.P2.get_stats()
 
@@ -198,4 +207,5 @@ class Game:
                 player.update_strategy(shot, x, y)
                 print(shot)
             else:
-                print("Invalid shot, try again")
+                if not player.is_ai:
+                    print("Invalid shot, try again")

@@ -73,6 +73,11 @@ class Player:
 
         print('\n----------------------------------\n')
     
+    '''
+    General update strategy function for AI opponents after each turn based on the feedback of the shot
+    In reality, this is only used for the medium AI difficulty
+    If a random shot by the medium difficulty was a hit, we need to start hitting orthogonally adjacent tiles
+    '''
     def update_strategy(self, shot, x, y):
         if self.ai_difficulty == "M":
             if not self.ai_ship_found and shot == "You hit a ship!":
@@ -83,13 +88,28 @@ class Player:
                 self.ai_ship_found_square = (None, None)
                 self.advancement = 1
     
+    '''
+    Handles deriving the next shot placement for AI difficulties, as well as the next shot placement or stats-related commands for
+    human players. This includes the "P" command to view individual player stats, as well as the "S" command to display the scoreboard
+    for both players
+    '''
     def get_shot_placement(self, target=None):
 
         if self.is_ai:
             if self.ai_difficulty == "E":
+                '''
+                Easy difficulty algorithm:
+                Simply choose a random row and column (if it has been hit before, outer game logic will rerun this function)
+                '''
                 x = random.randint(0,9)
                 y = random.randint(0,9)
             elif self.ai_difficulty == "M":
+                '''
+                Medium difficulty algorithm:
+                If we haven't gotten a hit, continue firing randomly
+                Otherwise, move clockwise around the hit square, starting from the top and spiralling outward with each shot.
+                We check for tile legality (within range and not hit before) before deciding on the next shot in this case
+                '''
                 if not self.ai_ship_found:
                     x = random.randint(0,9)
                     y = random.randint(0,9)
@@ -113,6 +133,10 @@ class Player:
                                 self.advancement += 1
                             self.orthogonal_direction = (self.orthogonal_direction + 1) % 4
             elif self.ai_difficulty == "H":
+                '''
+                Hard difficulty algorithm:
+                Find first non-hit ship tile and target it
+                '''
                 found_ship = False
                 x,y = (None, None)
                 for i, row in enumerate(target.ships):
@@ -139,6 +163,11 @@ class Player:
         return (x, y)
     
     def get_stats(self):
+        '''
+        Stats calculation function used by both view_stats and display_scoreboard
+        Gets total successful shots FROM the player, total ships destroyed BY the player,
+        and total hits taken RECEIVED by the player
+        '''
 
         success_shots = 0
         total_ships_destroyed = 0
@@ -160,6 +189,9 @@ class Player:
 
     
     def view_stats(self):
+        '''
+        Uses get_stats to print player stats correspondingly
+        '''
 
         success_shots, total_ships_destroyed, total_hits_taken = self.get_stats()
 
