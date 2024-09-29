@@ -81,5 +81,6 @@ def main():
 
     
     print("YOU WIN!")
+    G.display_scoreboard()
 
 main()
