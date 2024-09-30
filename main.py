@@ -47,7 +47,7 @@ def main():
             print("Invalid input. Please enter a valid integer between 1 and 5.")
             
     
-    # Initializes Game and Player classes
+    # This initializes Game and Player classes
     G = Game(num, is_ai, ai_difficulty)
     P1 = G.get_P1()
     P2 = G.get_P2()

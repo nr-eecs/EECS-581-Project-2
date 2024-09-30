@@ -25,7 +25,7 @@ class Player:
         self.orthogonal_direction = 0 # 0 -> Up, 1 -> Right, 2 -> Down, 3 -> Left
         self.advancement = 1
         
-        # generate boards 
+        # Thus will generate boards 
         self.ships = [[0 for _ in range(10)] for _ in range(10)]
         self.shots = [[0 for _ in range(10)] for _ in range(10)]
     
