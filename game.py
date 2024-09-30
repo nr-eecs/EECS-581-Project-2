@@ -208,5 +208,5 @@ class Game:
                 if not player.is_ai:
                     print("Invalid shot, try again")
             
-        if not player.is_ai:
+        if not player.is_ai and not target.is_all_sunk():
             input("Press Enter to continue to the next turn...")
